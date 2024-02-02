@@ -4,11 +4,11 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::constants::APPLICATION_JSON;
 use crate::like::Like;
 use crate::response::Response;
 
 pub type Tweets = Response<Tweet>;
+pub const APPLICATION_JSON: &str = "application/json";
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Tweet {
@@ -55,14 +55,14 @@ pub async fn list() -> HttpResponse {
 }
 
 #[post("/tweets")]
-pub async fn create(twet_req: Json<TweetRequest>) -> HttpResponse {
-    HttpRequest::Created()
+pub async fn create(tweet_req: Json<TweetRequest>) -> HttpResponse {
+    HttpResponse::Created()
         .content_type(APPLICATION_JSON)
         .json(tweet_req.to_tweet())
 }
 
 #[get("/tweets/{id}")]
-pub async fn get(path: Path<(String,)>) -> HttpResponse {
+pub async fn get(_path: Path<(String,)>) -> HttpResponse {
     //TODO: find tweet by ID and return it
     let found_tweet: Option<Tweet> = None;
 
@@ -78,7 +78,7 @@ pub async fn get(path: Path<(String,)>) -> HttpResponse {
 }
 
 #[delete("/tweets/{id}")]
-pub async fn delete(path: Path<(String,)>) -> HttpResponse {
+pub async fn delete(_path: Path<(String,)>) -> HttpResponse {
     //TODO: delete tweet by ID, return status 204
 
     HttpResponse::NoContent()

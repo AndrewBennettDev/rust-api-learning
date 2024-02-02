@@ -4,10 +4,10 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::constants::APPLICATION_JSON;
 use crate::response::Response;
 
 pub type Likes = Response<Like>;
+pub const APPLICATION_JSON: &str = "application/json";
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Like {
@@ -25,7 +25,7 @@ impl Like {
 }
 
 #[get("/tweets/{id}/likes")]
-pub async fn list(path: Path<(String,)>) -> HttpResponse {
+pub async fn list(_path: Path<(String,)>) -> HttpResponse {
     let likes = Likes { results: vec![] };
 
     HttpResponse::Ok()
@@ -34,18 +34,18 @@ pub async fn list(path: Path<(String,)>) -> HttpResponse {
 }
 
 #[post("/tweets/{id}likes")]
-pub async fn plus_one(path: Path<(String,)>) -> HttpResponse {
+pub async fn plus_one(_path: Path<(String,)>) -> HttpResponse {
     let like = Like::new();
 
-    HttpResponse::created()
+    HttpResponse::Created()
         .content_type(APPLICATION_JSON)
         .json(like)
 }
 
 #[delete("/tweets/{id}/likes")]
-pub async fn minus_one(path: Path<(String,)>) -> HttpResponse {
+pub async fn minus_one(_path: Path<(String,)>) -> HttpResponse {
     HttpResponse::NoContent()
-        .content(APPLICATION_JSON)
+        .content_type(APPLICATION_JSON)
         .await
         .unwrap()
 }
